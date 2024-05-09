@@ -21,8 +21,8 @@ Download gst_plugins-detection-small-object from github and create a virtual env
 ``` sh
 mkdir repos-e .
 cd repos
-git clone https://github.com/johnnewto/gst_plugins-detection-small-object
-cd gst_plugins-detection-small-object
+git clone https://github.com/johnnewto/gst-plugins-detection-small-object
+cd gst-plugins-detection-small-object
 python -m venv 'venv'
 source ./venv/bin/activate
 pip install --upgrade pip
