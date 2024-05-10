@@ -20,7 +20,7 @@ import numpy as np
 from imutils import resize
 import pdb
 import gi
-from pprint import pprint
+# from pprint import pprint
 
 gi.require_version('Gst', '1.0')
 gi.require_version('GstBase', '1.0')
@@ -30,7 +30,7 @@ from gi.repository import Gst, GObject, GLib, GstBase  # noqa:F401,F402
 
 from gstreamer.utils import gst_buffer_with_caps_to_ndarray  # noqa:F401,F402
 from gstreamer.gst_objects_info_meta import gst_meta_get, gst_meta_write, gst_meta_remove
-from small_object_detector import get_tile
+from small_object_detector import get_tile, putlabel
 # formats taken from existing videoconvert plugins
 # gst-inspect-1.0 videoconvert
 FORMATS = [f.strip()
@@ -104,8 +104,8 @@ class GstTileDetections(GstBase.BaseTransform):
     def __init__(self):
         super(GstTileDetections, self).__init__()
 
-        self._tile_width = 40
-        self._tile_height = 40
+        self._tile_width = 60
+        self._tile_height = 60
         self._num_tiles = 10
 
 
@@ -166,17 +166,30 @@ class GstTileDetections(GstBase.BaseTransform):
             # make tile list, scale it to he output width, and place at top of the output image
             tiles = []
 
-            for d in detections:   # xywh
-
+            for cnt, d in enumerate(detections):   # xywh
                 l, t, w, h = d['bounding_box']
                 # convert to int from yolo format
                 l, t, w, h = int(l*w_in), int(t*h_in), int(w*w_in), int(h*h_in)
+                # find the centers of the bounding box
+                c, r = int(l + w/2), int(t + h/2)
+                # make sure that the tile is within the image
+                c, r = clip(c, 0, w_in), clip(r, 0, h_in)
+                # calc l, t, w, h from center and tile size
+                l, t = c - self._tile_width//2, r - self._tile_height//2
+                w, h = self._tile_width, self._tile_height
                 # pdb.set_trace()
-                tile = get_tile(in_image, (t, l), (h, w), copy=False) # copy so any changes affect the image 
-                tiles.append(tile)
+
+                tile = get_tile(in_image, (t, l), (h, w), copy=True) # copy so any changes affect the image 
+
                 if tile.shape[2] == 3:
                     print(f'{tile.shape = }')
                     tile = cv2.cvtColor(tile, cv2.COLOR_BGR2BGRA)
+
+                # put label count in left top corner
+                clr = (255, 0, 0) if cnt < 5 else (0,255,0) if cnt < 10 else (0, 0, 255)  # in order red, green, blue
+                # cv2.putText(tile, str(count), (0, 10), cv2.FONT_HERSHEY_SIMPLEX, 0.4, clr, 1)
+                putlabel(tile, f'{cnt}', (0,7), fontScale=0.4, color=clr, thickness=1)
+                tiles.append(tile)
 
             # pdb.set_trace()
             tile_img = np.hstack(tiles)
