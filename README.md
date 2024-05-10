@@ -44,7 +44,7 @@ pip install -e git+file:///home/$USER/PycharmProjects/SmallObjDetector#egg=small
 
 ## Usage
 
-### Run example of use see 
+### Run examples of use see 
 ```bash
 ./scripts/sod-run.sh
 
@@ -71,9 +71,7 @@ gst-launch-1.0 multifilesrc location="data/images/DSC0%04d.JPG" start-index=1013
 ```
 
 ##### Parameters
-
- - **config**: Todo
-
+ -  Todo
 
 
 ### Additional
@@ -91,5 +89,27 @@ export GST_DEBUG=python:{0,1,2,3,4,5 ...}
 ```bash
 export GST_PYTHON_LOG_LEVEL={0,1,2,3,4,5 ...}
 ```
-       
+----       
 
+#### Problems
+- To get this running on the jetson I had to reinstall gstreamer with these command (don't purge because gstreamer is used alot in the OS)
+
+``` sh
+sudo apt-get install  --reinstall libgstreamer1.0-0 gstreamer1.0-dev gstreamer1.0-tools gstreamer1.0-doc
+sudo apt-get install --reinstall  gstreamer1.0-plugins-base gstreamer1.0-plugins-good 
+sudo apt-get install --reinstall  gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly 
+sudo apt-get install --reinstall  gstreamer1.0-libav
+sudo apt-get install --reinstall  gstreamer1.0-x gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio 
+
+sudo apt install --reinstall python3-gst-1.0 gstreamer1.0-python3-plugin-loader
+```
+
+- If it cant find a plugin, try reset the gst registry (it regenerates itself)
+```bash
+./scripts/rm_gst_registry.sh 
+```
+
+- Don't forget to  enable plugins implemented in **gst/python**
+```bash
+export GST_PLUGIN_PATH=$GST_PLUGIN_PATH:$PWD/venv/lib/gstreamer-1.0/:$PWD/gst/
+```
