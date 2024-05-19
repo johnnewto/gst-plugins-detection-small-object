@@ -7,21 +7,13 @@
 
 see `docs/output.mp4` or 
 
-## Installation 1
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-
-pip install --upgrade wheel pip setuptools
-pip install --upgrade --requirement requirements.txt
-```
-### Or Installation 2
+### Installation 
 
 Download gst_plugins-detection-small-object from github and create a virtual environment
 
 ``` sh
-mkdir repos-e .
+mkdir repos
 cd repos
 git clone https://github.com/johnnewto/gst-plugins-detection-small-object
 cd gst-plugins-detection-small-object
@@ -29,6 +21,20 @@ python -m venv 'venv'
 source ./venv/bin/activate
 pip install --upgrade pip
 pip install -e .
+```
+
+if developing you can install dev packages 
+``` sh
+pip install -e .[dev]
+```
+Bump version using 
+``` sh 
+(venv) $ bumpver update --patch
+INFO    - fetching tags from remote (to turn off use: -n / --no-fetch)
+INFO    - Old Version: 0.0.1
+INFO    - New Version: 0.0.2
+INFO    - git commit --message 'bump version 0.0.1 -> 0.0.2'
+INFO    - git tag --annotate 0.0.2 --message '0.0.2'
 ```
 
 #### Note: If developing you install small-object-detector local package as editable ()
