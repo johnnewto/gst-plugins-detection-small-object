@@ -6,7 +6,10 @@ Usage
     gst-launch-1.0 filesrc location=video.mp4 ! decodebin ! videoconvert ! \
         gst_tf_detection config=data/tf_object_api_cfg.yml ! videoconvert ! \
         gst_detection_overlay ! videoconvert ! autovideosink
+
 """
+# Version of package
+__version__ = "0.0.1"
 
 import os
 import logging
@@ -21,6 +24,8 @@ from gstreamer import map_gst_buffer
 import gstreamer.utils as utils
 from gstreamer.gst_objects_info_meta import gst_meta_get
 import pdb
+
+
 
 def _get_log_level() -> int:
     return int(os.getenv("GST_PYTHON_LOG_LEVEL", logging.DEBUG / 10)) * 10

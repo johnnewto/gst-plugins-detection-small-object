@@ -1,0 +1,76 @@
+[build-system]
+requires      = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gst_plugins-small-object-detector"
+version = "0.0.1"
+description = "GST Plugin Small Object Detector "
+readme = "README.md"
+authors = [{ name = "John Newton", email = "xyz@abc.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["detector", "gstreamer", "small object", "object detection", "gst-plugins"]
+dependencies = [
+    "imutils",
+    "numpy",
+    "opencv-python==4.7.0.72",
+    "Pillow",
+    "scipy",
+    "scikit-image",
+    "gstreamer-python @ git+https://github.com/johnnewto/gstreamer-python.git#egg=gstreamer-python",
+    "small_object_detector @ git+https://github.com/johnnewto/SmallObjDetector#egg=small_object_detector"
+    ]
+
+requires-python = ">=3.8"
+
+[project.optional-dependencies]
+build = ["build", "twine"]
+dev   = ["black", "bumpver", "isort", "mypy", "pip-tools", "pytest"]
+
+# [project.scripts]
+# sodrun = "small_object_detector.__main__:main"
+
+[project.urls]
+repository    = "https://github.com/johnnewto/gst_plugins-small-object-detector"
+documentation = "https://github.com/johnnewto/gst_plugins-small-object-detector/readme.md"
+
+[tool.setuptools]
+packages = ["gst.python"]
+
+
+
+[tool.bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message  = "bump version {old_version} -> {new_version}"
+commit          = true
+tag             = true
+push            = false
+
+    [tool.bumpver.file_patterns]
+    "pyproject.toml" = [
+        'current_version = "{version}"',
+        'version = "{version}"',
+    ]
+    "gst/python/gst_detection_small_obj.py" = ["{version}"]
+    "gst/python/gst_detection_overlay.py" = ["{version}"]
+    "gst/python/gst_tile_detections.py" = ["{version}"]
+
+
+[tool.isort]
+profile                   = "black"
+import_heading_stdlib     = "Standard library imports"
+import_heading_thirdparty = "Third party imports"
+import_heading_firstparty = "Reader imports"
+
+# [tool.mypy]
+# strict = true
+
+#     [[tool.mypy.overrides]]
+#     module                 = "feedparser"
+#     ignore_missing_imports = true

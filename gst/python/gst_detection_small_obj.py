@@ -5,26 +5,30 @@ Usage
 
     gst-launch-1.0 filesrc location=video.mp4 ! decodebin ! videoconvert ! \
         gst_detection_small_obj config=data/small_object_api_cfg.yml ! videoconvert ! autovideosink
+
 """
+# Version of package
+__version__ = "0.0.1"
 
 import os
 import sys
 import logging
 import pdb
 import traceback
-import cv2
+
 # from ultralytics import YOLO
 import typing as typ
-import yaml
+
 import numpy as np
 
-from gstreamer import Gst, GObject, GstBase, GstVideo
+from gstreamer import Gst, GObject, GstBase
 import gstreamer.utils as utils
-from gstreamer.gst_objects_info_meta import gst_meta_write, gst_meta_remove
+from gstreamer.gst_objects_info_meta import gst_meta_write
 
 from small_object_detector import CMO_Peak
 from small_object_detector import setGImages, getGImages
-from small_object_detector import resize
+
+
 
 def _get_log_level() -> int:
     return int(os.getenv("GST_PYTHON_LOG_LEVEL", logging.DEBUG / 10)) * 10
@@ -33,25 +37,6 @@ def _get_log_level() -> int:
 log = logging.getLogger('gst_python')
 log.setLevel(_get_log_level())
 
-
-# todo jn
-# def create_config(device: str = 'CPU', *,  jn
-#                   per_process_gpu_memory_fraction: float = 0.0,
-#                   log_device_placement: bool = False) -> tf.ConfigProto:
-# def create_config(device: str = 'CPU', *,
-#                   per_process_gpu_memory_fraction: float = 0.0,
-#                   log_device_placement: bool = False):
-#     # """Creates tf.ConfigProto for specifi device"""
-#     # config = tf.compat.v1.ConfigProto(log_device_placement=log_device_placement)
-#     if is_gpu(device):
-#         if per_process_gpu_memory_fraction > 0.0:
-#             config.gpu_options.per_process_gpu_memory_fraction = per_process_gpu_memory_fraction
-#         else:
-#             config.gpu_options.allow_growth = True
-#     else:
-#         config.device_count['GPU'] = 0
-
-#     return config
 
 
 

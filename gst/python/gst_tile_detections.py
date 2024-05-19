@@ -8,7 +8,10 @@
     Caps negotiation:
         https://gstreamer.freedesktop.org/documentation/plugin-development/advanced/negotiation.html?gi-language=c
 
+
 """
+# Version of package
+__version__ = "0.0.1"
 
 import logging
 # import timeit
@@ -31,8 +34,8 @@ from gi.repository import Gst, GObject, GLib, GstBase  # noqa:F401,F402
 from gstreamer.utils import gst_buffer_with_caps_to_ndarray  # noqa:F401,F402
 from gstreamer.gst_objects_info_meta import gst_meta_get, gst_meta_write, gst_meta_remove
 from small_object_detector import get_tile, putlabel
-# formats taken from existing videoconvert plugins
-# gst-inspect-1.0 videoconvert
+
+
 FORMATS = [f.strip()
            for f in "RGBx,xRGB,BGRx,xBGR,RGBA,ARGB,BGRA,ABGR,RGB,BGR,RGB16,RGB15,GRAY8,GRAY16_LE,GRAY16_BE".split(',')]
 
