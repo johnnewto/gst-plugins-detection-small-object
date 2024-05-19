@@ -225,7 +225,8 @@ class GstDetectionOverlay(GstBase.BaseTransform):
 
 
     def do_transform_ip(self, buffer: Gst.Buffer) -> Gst.FlowReturn:
-
+        import time
+        start_time = time.time()
         if self.model is None:
             Gst.warning(f"No model speficied for {self}. Plugin working in passthrough mode")
             return Gst.FlowReturn.OK
@@ -246,6 +247,9 @@ class GstDetectionOverlay(GstBase.BaseTransform):
             Gst.error(f"Error {self}: {err}")
             return Gst.FlowReturn.ERROR
 
+        # Calculate and print the execution time
+        execution_time = time.time() - start_time
+        print(f"The execution time of gst-detection-overlay is {execution_time} seconds")
         return Gst.FlowReturn.OK
 
     def do_get_property(self, prop: GObject.GParamSpec):

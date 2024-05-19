@@ -178,7 +178,8 @@ class GstDetectionSmallObjPluginPy(GstBase.BaseTransform):
         return Gst.FlowReturn.OK
     
     def detect(self, image) -> typ.List:
-
+        import time
+        start_time = time.time()
         # if self.model is None:
         #     Gst.warning(f"No model specified for {self}. Plugin working in passthrough mode")
         #     return Gst.FlowReturn.OK
@@ -208,6 +209,9 @@ class GstDetectionSmallObjPluginPy(GstBase.BaseTransform):
             })
 
 
+        # Calculate and print the execution time
+        execution_time = time.time() - start_time
+        print(f"The execution time of small-object-detection is {execution_time} seconds")
         return detections
     
 

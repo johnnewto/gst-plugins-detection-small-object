@@ -66,9 +66,48 @@ case $OPTION in
       gst_detection_overlay ! videoconvert ! nvvidconv ! nvv4l2h264enc ! h264parse ! mp4mux ! filesink location=docs/output.mp4
     ;;
   5)
-    # Option 3 = fakesink
+    # Option = fakesink
     gst-launch-1.0 multifilesrc location="${DIR}/DSC0%04d.JPG" start-index=$IDX num-buffers=$NUM_BUFFERS caps="image/jpeg,framerate=5/1" ! $JPEGDEC ! queue ! videoconvert !  \
         gst_detection_small_obj  ! videoconvert  ! fakesink sync=true
+    ;;
+  6) 
+    # Option = 'pylonsrc ! video/x-raw, format=YUY2',
+    gst-launch-1.0 pylonsrc ! video/x-raw,width=3860,height=2178,format=YUY2,framerate=7/1 ! videoconvert !  \
+        gst_detection_small_obj  ! videoconvert  ! videoscale ! video/x-raw,width=1280,height=720 ! queue ! \
+        gst_detection_overlay ! videoconvert ! fpsdisplaysink sync = true
+    ;;
+  7) 
+    # Option = 'pylonsrc ! video/x-raw, format=YUY2',
+    gst-launch-1.0 pylonsrc ! video/x-raw,width=3860,height=2178,format=YUY2,framerate=5/1 ! videoconvert !  \
+        gst_detection_small_obj  ! videoconvert  ! videoscale ! video/x-raw,width=1920,height=1080 ! queue ! \
+        gst_detection_overlay ! videoconvert ! \
+        interpipesink name='cam1' interpipesrc listen-to='cam1' is-live=false allow-renegotiation=true format=time ! queue ! \
+        nvvidconv ! nvv4l2h264enc bitrate=4000000 ! \
+        rtph264pay config-interval=1 ! udpsink host=10.42.0.10 port=5000  sync=false 
+
+    ;;
+
+  8)
+    # Option = videotestsrc + overlay
+    gst-launch-1.0 videotestsrc num-buffers=$NUM_BUFFERS ! video/x-raw,width=1920,height=1080,framerate=30/1 ! videoconvert ! \
+        interpipesink name=cam1  interpipesrc listen-to=cam1 is-live=false allow-renegotiation=true format=time ! \
+        videoconvert ! fpsdisplaysink sync = true
+    ;;
+  9) 
+    # Option = 'pylonsrc ! video/x-raw, format=YUY2',
+    gst-launch-1.0 pylonsrc ! video/x-raw,width=3860,height=2178,format=YUY2,framerate=5/1 ! videoconvert ! queue ! \
+        gst_detection_small_obj ! videoconvert ! videoscale ! video/x-raw,width=1280,height=720 ! queue ! \
+        fpsdisplaysink sync = true
+    ;;
+
+  10)   
+    # Option = 'pylonsrc ! video/x-raw, format=YUY2',
+    gst-launch-1.0 pylonsrc ! video/x-raw,width=3860,height=2178,format=YUY2,framerate=5/1 ! videoconvert !  \
+        videoscale ! video/x-raw,width=1920,height=1080 ! queue ! \
+        interpipesink name='cam1' interpipesrc listen-to='cam1' is-live=false allow-renegotiation=true format=time ! queue ! \
+        videoconvert ! nvvidconv ! nvv4l2h264enc bitrate=8000000 ! \
+        rtph264pay config-interval=5 ! udpsink host=127.0.0.1 port=5000  sync=false 
+
     ;;
   *)
     echo "Invalid option: $OPTION" 1>&2

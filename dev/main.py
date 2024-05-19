@@ -13,8 +13,6 @@ if __name__ == '__main__':
     pprint(sys.path)
     import gst.python.gst_detection_small_obj as test_detection
     import gst.python.gst_detection_overlay as test_overlay
-    # import gst.python.gstvideocrop as gstvideocrop
-    from gst.python.gstvideocrop import GstVideoCrop, FORMATS
     from gst.python.gst_tile_detections import GstTileDetections, FORMATS
 
     from pathlib import Path
